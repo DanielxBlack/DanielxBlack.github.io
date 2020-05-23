@@ -7,5 +7,4 @@ layout: default
 
 # {{ page.title }}
 
-{{ content }}
-
+This is just a content test.
