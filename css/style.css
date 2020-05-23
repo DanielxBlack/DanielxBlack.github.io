@@ -1,5 +1,5 @@
 /* CSS shiznit */
-
+{{ "/css/style.css" | relative_url }}
 
 /* center */
 center
@@ -21,7 +21,7 @@ center
     width: 100%; /*Full width of page*/
     z-index: 3;
 }
-    
+
 
 
 /* Navbar Links */
@@ -87,7 +87,7 @@ body
     background-color: black;
     font-family: Arial, Helvetica, Geneva, Swiss, sans-serif;
     color: #D8D8D8;
-    
+
 }
 
 
@@ -134,7 +134,7 @@ article
 
 /*Link colors*/
 a:link {
-    color: yellow; /*new links*/  
+    color: yellow; /*new links*/
 }
 
 a:visited {
