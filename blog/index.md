@@ -1,5 +1,5 @@
 ---
-title: El Blog
+title: Das Blog
 layout: default
 ---
 
