@@ -1,5 +1,5 @@
 ---
-title: Tacos n' Security -- or something.
+title: Das Blog
 layout: default
 ---
 
