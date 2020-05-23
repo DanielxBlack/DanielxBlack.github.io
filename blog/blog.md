@@ -1,6 +1,6 @@
 ---
 title: Das Blog
-layout: design
+layout: default
 ---
 
 
