@@ -2,9 +2,3 @@ name: Das Blog
 url: https://danielxblack.github.io
 baseurl: /blog
 
-kramdown:
- parse_block_html: true
- input: GFM
- auto_ids: true
- hard_wrap: false
- syntax_highlighter: rouge
