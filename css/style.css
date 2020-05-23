@@ -1,5 +1,5 @@
 /* CSS shiznit */
-{{ "/css/style.css" | relative_url }}
+{{ "/assets/style.css" | relative_url }}
 
 /* center */
 center
