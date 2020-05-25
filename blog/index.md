@@ -15,4 +15,6 @@ This is mostly filler for now. I'm just trying to see what I can do with this. I
 
 This took a bit, and it seems kind of cool, but I don't know if it's the most efficient for what I want to do (upload lots of images, etc.). I feel like that's where a CMS would really shine.
 
-Eh, we will see.
+It was fun following this guide for converting my HTML site to Jekyll: https://jekyllrb.com/tutorials/convert-site-to-jekyll/, but I think I prefer a CMS for my Hack the Box posts. It just feels like a more efficient approach for what I am going to be doing.
+
+We will see how I feel after I go through a box or two.
