@@ -1,5 +1,5 @@
 ---
-title: Das Blog
+title: das blog
 layout: default
 ---
 
@@ -15,6 +15,6 @@ This is mostly filler for now. I'm just trying to see what I can do with this. I
 
 This took a bit, and it seems kind of cool, but I don't know if it's the most efficient for what I want to do (upload lots of images, etc.). I feel like that's where a CMS would really shine.
 
-It was fun following this guide for converting my HTML site to Jekyll: https://jekyllrb.com/tutorials/convert-site-to-jekyll/, but I think I prefer a CMS for my Hack the Box posts. It just feels like a more efficient approach for what I am going to be doing.
+It was fun trying to figure out how to convert my site from HTML to Jekyll and falling into all kinds of rabbit holes in the process. It worked out, but I don't know if I wan to continue this route.
 
 We will see how I feel after I go through a box or two.
