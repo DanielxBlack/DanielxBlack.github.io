@@ -18,7 +18,6 @@
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          // This body will likely be ignored or rejected unless correct structure is used
           SortOrder: "Descending",
           ViewFilter: "All",
           FolderId: {
@@ -36,7 +35,7 @@
         document.getElementById("output").textContent = "Response:\n" + data;
       })
       .catch(error => {
-        document.getElementById("output").textContent = "Error:\n" + error);
+        document.getElementById("output").textContent = "Error:\n" + error.message;
       });
     }
   </script>
