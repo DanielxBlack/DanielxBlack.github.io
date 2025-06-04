@@ -1,32 +1,44 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>CORS PoC</title>
+    <title>CORS Test Template</title>
   </head>
   <body>
-    <h1>CORS PoC</h1>
+    <h1>CORS Test Template</h1>
+    <input type="text" id="urlInput" placeholder="https://domain.com/some-endpoint" style="width: 80%;" />
     <button onclick="testCORS()">Test CORS</button>
-    <pre id="output"></pre>
+    <pre id="output" style="white-space: pre-wrap;"></pre>
 
     <script>
       function testCORS() {
-        fetch("https://graph.microsoft.com/v1.0/30d5090a-7441-4e13-ba3b-ebd450c9471e/subscribedskus", {
+        const url = document.getElementById('urlInput').value.trim();
+        if (!url) {
+          alert('Please enter a URL.');
+          return;
+        }
+
+        fetch(url, {
           method: "GET",
-          credentials: "include", // Include cookies if needed
+          credentials: "include", // Remove this if you don't want cookies/session headers sent
           headers: {
-            'Accept': 'text/html'
+            'Accept': 'text/html' // Or 'application/json' based on the expected content
           }
         })
         .then(response => {
+          const headerDump = [...response.headers.entries()]
+            .map(([k, v]) => `${k}: ${v}`)
+            .join('\n');
+
           document.getElementById('output').textContent =
-            `Status: ${response.status}\nHeaders:\n${[...response.headers.entries()].map(([k,v]) => k + ': ' + v).join('\n')}`;
+            `Status: ${response.status}\n\nHeaders:\n${headerDump}`;
+
           return response.text();
         })
-        .then(data => {
-          document.getElementById('output').textContent += `\n\nBody:\n${data}`;
+        .then(body => {
+          document.getElementById('output').textContent += `\n\nBody:\n${body}`;
         })
         .catch(error => {
-          document.getElementById('output').textContent = `CORS Error or Network Error:\n${error}`;
+          document.getElementById('output').textContent = `Fetch Error (CORS or Network):\n${error}`;
         });
       }
     </script>
