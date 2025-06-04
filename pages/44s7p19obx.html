@@ -10,20 +10,23 @@
 
     <script>
       function testCORS() {
-        fetch("https://graph.micrsoft.com/v1.0/30d5090a-7441-4e13-ba3b-ebd450c947le/subscribedskus", {
+        fetch("https://graph.microsoft.com/v1.0/30d5090a-7441-4e13-ba3b-ebd450c9471e/subscribedskus", {
           method: "GET",
-          credentials: "include" // Include cookies if needed
+          credentials: "include", // Include cookies if needed
+          headers: {
+            'Accept': 'text/html'
+          }
         })
         .then(response => {
           document.getElementById('output').textContent =
-            `Status: ${response.status}\nHeaders: ${[...response.headers.entries()].map(([k,v]) => k + ': ' + v).join('\n')}`;
+            `Status: ${response.status}\nHeaders:\n${[...response.headers.entries()].map(([k,v]) => k + ': ' + v).join('\n')}`;
           return response.text();
         })
         .then(data => {
           document.getElementById('output').textContent += `\n\nBody:\n${data}`;
         })
         .catch(error => {
-          document.getElementById('output').textContent = `CORS Error: ${error}`;
+          document.getElementById('output').textContent = `CORS Error or Network Error:\n${error}`;
         });
       }
     </script>
